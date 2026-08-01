@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MojServis — Softver za auto-servise</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap');
+
+  :root {
+    --graphite: #1C1F26;
+    --graphite-alt: #262A33;
+    --paper: #F7F6F2;
+    --card: #FFFFFF;
+    --ink: #20232B;
+    --muted: #6B7280;
+    --line: #E4E2DC;
+    --amber: #E07B1E;
+    --amber-dark: #C4650F;
+    --green: #2F9E5B;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .stripe {
+    height: 8px;
+    background: repeating-linear-gradient(135deg, var(--amber), var(--amber) 12px, var(--graphite) 12px, var(--graphite) 24px);
+  }
+
+  header {
+    background: var(--graphite);
+    padding: 20px 0;
+  }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 19px;
+    color: #fff;
+    letter-spacing: 0.3px;
+  }
+  .logo span { color: var(--amber); }
+  .header-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: #C7C9CF;
+  }
+  .header-price strong { color: var(--amber); }
+
+  .hero {
+    background: var(--graphite);
+    color: #fff;
+    padding: 90px 0 110px;
+    position: relative;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 44px;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin-bottom: 22px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--amber);
+  }
+  .hero p.lead {
+    font-size: 17px;
+    color: #C7C9CF;
+    max-width: 460px;
+    margin-bottom: 34px;
+  }
+  .hero-ctas { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 26px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.12s ease;
+  }
+  .btn-primary { background: var(--amber); color: #1C1F26; }
+  .btn-primary:hover { background: #F09143; transform: translateY(-1px); }
+  .btn-ghost { color: #fff; border: 1px solid #454A56; }
+  .btn-ghost:hover { border-color: var(--amber); color: var(--amber); }
+
+  .ticket {
+    background: var(--card);
+    color: var(--ink);
+    border-radius: 6px;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  }
+  .ticket::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 26px 26px 0;
+    border-color: transparent var(--paper) transparent transparent;
+  }
+  .ticket-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-ticket { padding: 26px 26px 22px; }
+  .hero-ticket .ticket-tag { color: var(--amber-dark); font-weight: 700; }
+  .hero-ticket-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13.5px;
+  }
+  .hero-ticket-row:last-child { border-bottom: none; }
+  .hero-ticket-row .label { color: var(--muted); }
+  .hero-ticket-row .val { font-weight: 600; }
+  .badge-mini {
+    display: inline-block;
+    background: #E4F5EA;
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  section { padding: 90px 0; }
+  .section-light { background: var(--paper); }
+  .section-dark { background: var(--graphite); color: #fff; }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--amber-dark);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 12px;
+  }
+  .section-dark .eyebrow { color: var(--amber); }
+
+  h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: -0.3px;
+    margin-bottom: 16px;
+    max-width: 620px;
+  }
+  .section-intro {
+    color: var(--muted);
+    max-width: 560px;
+    font-size: 16px;
+    margin-bottom: 50px;
+  }
+  .section-dark .section-intro { color: #A9AEB8; }
+
+  .problem-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .problem-item {
+    border-left: 3px solid var(--amber);
+    padding-left: 20px;
+  }
+  .problem-item .num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .problem-item p { font-size: 15px; color: var(--ink); }
+
+  .modul-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .modul-card {
+    padding: 22px 20px 20px;
+  }
+  .modul-card h3 {
+    font-size: 16.5px;
+    font-weight: 700;
+    margin: 10px 0 8px;
+  }
+  .modul-card p {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .showcase {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .showcase-list { list-style: none; }
+  .showcase-list li {
+    display: flex;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid #383D48;
+  }
+  .showcase-list li:last-child { border-bottom: none; }
+  .showcase-list .check {
+    color: var(--amber);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .showcase-list strong { display: block; margin-bottom: 3px; }
+  .showcase-list span.desc { color: #A9AEB8; font-size: 14px; }
+
+  .mock-frame {
+    background: var(--graphite-alt);
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid #383D48;
+  }
+  .mock-window {
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    font-size: 11px;
+  }
+  .mock-topbar {
+    background: #EDECE6;
+    padding: 8px 12px;
+    display: flex;
+    gap: 6px;
+  }
+  .mock-dot { width: 9px; height: 9px; border-radius: 50%; background: #D6D3CB; }
+  .mock-body { padding: 18px; }
+  .mock-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .mock-stat-row { display: flex; gap: 10px; margin-bottom: 14px; }
+  .mock-stat {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
+  }
+  .mock-stat .n { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px; }
+  .mock-stat .l { font-size: 8.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; margin-top: 3px; }
+
+  .price-wrap { display: flex; justify-content: center; }
+  .price-ticket {
+    width: 420px;
+    padding: 40px 36px 34px;
+  }
+  .price-ticket .ticket-tag { text-align: center; display: block; margin-bottom: 6px; }
+  .price-amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 46px;
+    text-align: center;
+    margin: 6px 0 2px;
+  }
+  .price-amount .cur { font-size: 22px; color: var(--muted); font-weight: 600; }
+  .price-rsd { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  .price-list { list-style: none; margin-bottom: 28px; }
+  .price-list li {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .price-list li:last-child { border-bottom: none; }
+  .price-list .ok { color: var(--green); font-weight: 700; }
+  .price-cta { display: block; text-align: center; }
+
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+  }
+  .faq-item h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .faq-item p {
+    color: var(--muted);
+    font-size: 14.5px;
+    max-width: 640px;
+  }
+
+  footer {
+    background: var(--graphite);
+    color: #8A8F98;
+    padding: 44px 0;
+    font-size: 13.5px;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer .logo { font-size: 15px; }
+
+  @media (max-width: 860px) {
+    .hero-grid, .showcase { grid-template-columns: 1fr; }
+    .modul-grid { grid-template-columns: repeat(2, 1fr); }
+    .problem-strip { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 32px; }
+    h2 { font-size: 24px; }
+  }
+  @media (max-width: 540px) {
+    .modul-grid { grid-template-columns: 1fr; }
+    .wrap { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="logo">■■ Moj<span>Servis</span></div>
+    <div class="header-price">89 € <strong>/ jednokratno</strong></div>
+  </div>
+</header>
+
+<div class="stripe"></div>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-eyebrow">Softver za auto-servise</div>
+      <h1>Radni nalog se ne gubi<br>kad ga <em>ne tražiš na papiru.</em></h1>
+      <p class="lead">Klijenti, vozila, zakazivanje, radni nalozi, fakturisanje, zalihe i plate radnika — sve na jednom mestu, na tvom računaru, bez pretplate i bez interneta.</p>
+      <div class="hero-ctas">
+        <a href="#cena" class="btn btn-primary">Pogledaj cenu</a>
+        <a href="#moduli" class="btn btn-ghost">Šta sve radi →</a>
+      </div>
+    </div>
+    <div class="ticket hero-ticket">
+      <span class="ticket-tag">RN-1084 · Otvoren</span>
+      <div class="hero-ticket-row"><span class="label">Vozilo</span><span class="val">Opel Insignia</span></div>
+      <div class="hero-ticket-row"><span class="label">Registracija</span><span class="val mono">NI-123-AB</span></div>
+      <div class="hero-ticket-row"><span class="label">Klijent</span><span class="val">Jovan Jovanović</span></div>
+      <div class="hero-ticket-row"><span class="label">Mehaničar</span><span class="val">Nikola Dekić</span></div>
+      <div class="hero-ticket-row"><span class="label">Status naplate</span><span class="val"><span class="badge-mini">Plaćeno</span></span></div>
+      <div class="hero-ticket-row"><span class="label">Ukupno</span><span class="val mono">7.200 RSD</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-light">
+  <div class="wrap">
+    <div class="eyebrow">Problem</div>
+    <h2>Sveska, Viber poruke i pamćenje nisu sistem.</h2>
+    <div class="problem-strip">
+      <div class="problem-item">
+        <div class="num mono">01</div>
+        <p>Klijent zove da pita "je l' gotovo moje?" — a ti tražiš svesku od pre dve nedelje da vidiš šta si mu obećao.</p>
+      </div>
+      <div class="problem-item">
+        <div class="num mono">02</div>
+        <p>Faktura se piše ručno, PDV se računa u glavi, a na kraju meseca niko ne zna tačno koliko je zarađeno.</p>
+      </div>
+      <div class="problem-item">
+        <div class="num mono">03</div>
+        <p>Filter ulja koji si sigurno imao na stanju — nestao je, i saznaš to tek kad ti treba.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-light" id="moduli" style="padding-top:0;">
+  <div class="wrap">
+    <div class="eyebrow">Rešenje</div>
+    <h2>Osam modula, jedna aplikacija.</h2>
+    <p class="section-intro">Sve što ti treba za vođenje servisa — bez posebnih pretplata za svaki deo, bez internet zavisnosti za svakodnevni rad.</p>
+
+    <div class="modul-grid">
+      <div class="ticket modul-card">
+        <span class="ticket-tag">Modul</span>
+        <h3>Klijenti i vozila</h3>
+        <p>Istorija svakog vozila na jednom mestu — ko je vlasnik, šta je rađeno, i kada.</p>
+      </div>
+      <div class="ticket modul-card">
+        <span class="ticket-tag">Modul</span>
+        <h3>Zakazivanje</h3>
+        <p>Kalendar termina, dodela mehaničaru, jednim klikom pretvaraš termin u radni nalog.</p>
+      </div>
+      <div class="ticket modul-card">
+        <span class="ticket-tag">Modul</span>
+        <h3>Radni nalozi</h3>
+        <p>Usluge i delovi na nalogu, automatski PDV obračun, štampa za potpis klijenta.</p>
+      </div>
+      <div class="ticket modul-card">
+        <span class="ticket-tag">Modul</span>
+        <h3>Fakturisanje</h3>
+        <p>Faktura iz zatvorenog naloga u jednom kliku, PDF sa tvojim logom, spremna za štampu.</p>
+      </div>
+      <div class="ticket modul-card">
+        <span class="ticket-tag">Modul</span>
+        <h3>Zalihe delova</h3>
+        <p>Stanje na skladištu, automatska marža, upozorenje kad nešto nestaje.</p>
+      </div>
+      <div class="ticket modul-card">
+        <span class="ticket-tag">Modul</span>
+        <h3>Mehaničari i plate</h3>
+        <p>Raspodela posla po boksovima, pun obračun zarada — bruto, neto, doprinosi.</p>
+      </div>
+      <div class="ticket modul-card">
+        <span class="ticket-tag">Modul</span>
+        <h3>Podsetnici</h3>
+        <p>Znaš tačno koga treba pozvati za redovan servis pre nego što on tebe pozove ljut.</p>
+      </div>
+      <div class="ticket modul-card">
+        <span class="ticket-tag">Modul</span>
+        <h3>Izveštaji</h3>
+        <p>Promet po mesecima, najprofitabilniji klijenti, izvoz u CSV za knjigovođu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-dark">
+  <div class="wrap showcase">
+    <div>
+      <div class="eyebrow">Zašto MojServis</div>
+      <h2 style="color:#fff;">Napravljen za servis, ne prekrojen od nečeg drugog.</h2>
+      <ul class="showcase-list">
+        <li>
+          <span class="check mono">✓</span>
+          <div><strong>Radi bez interneta</strong><span class="desc">Baza je na tvom računaru. Nestane struja u provajderu — ti i dalje radiš.</span></div>
+        </li>
+        <li>
+          <span class="check mono">✓</span>
+          <div><strong>Platiš jednom, koristiš zauvek</strong><span class="desc">Nema mesečne pretplate koja se tiho skida sa računa.</span></div>
+        </li>
+        <li>
+          <span class="check mono">✓</span>
+          <div><strong>Automatska rezervna kopija</strong><span class="desc">Baza se čuva svaki dan — greška ili pad sistema ne znači izgubljen mesec podataka.</span></div>
+        </li>
+        <li>
+          <span class="check mono">✓</span>
+          <div><strong>Sve funkcije uključene</strong><span class="desc">Bez podele na "Basic" i "Premium" — ono što vidiš na sajtu, to i dobiješ.</span></div>
+        </li>
+      </ul>
+    </div>
+    <div class="mock-frame">
+      <div class="mock-window">
+        <div class="mock-topbar"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+        <div class="mock-body">
+          <div class="mock-stat-row">
+            <div class="mock-stat"><div class="n">3</div><div class="l">Termina danas</div></div>
+            <div class="mock-stat"><div class="n">7</div><div class="l">Otvor. naloga</div></div>
+            <div class="mock-stat"><div class="n">12.400</div><div class="l">Neplaćeno RSD</div></div>
+          </div>
+          <div class="mock-row"><span>RN-1082 · Opel Astra</span><span>U radu</span></div>
+          <div class="mock-row"><span>RN-1083 · VW Golf</span><span>Čeka delove</span></div>
+          <div class="mock-row"><span>RN-1084 · Insignia</span><span>Završen</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-light" id="cena">
+  <div class="wrap">
+    <div class="eyebrow" style="text-align:center;">Cena</div>
+    <h2 style="margin:0 auto 50px; text-align:center;">Jedna cena. Sve uključeno.</h2>
+    <div class="price-wrap">
+      <div class="ticket price-ticket">
+        <span class="ticket-tag">Licenca · 1 računar</span>
+        <div class="price-amount">89 <span class="cur">EUR</span></div>
+        <div class="price-rsd">≈ 10.450 RSD · jednokratno</div>
+        <ul class="price-list">
+          <li><span class="ok mono">✓</span> Svih 8 modula, bez ograničenja</li>
+          <li><span class="ok mono">✓</span> Neograničen broj klijenata i vozila</li>
+          <li><span class="ok mono">✓</span> Automatska rezervna kopija baze</li>
+          <li><span class="ok mono">✓</span> Rad bez interneta</li>
+          <li><span class="ok mono">✓</span> Nema mesečnih troškova</li>
+        </ul>
+        <a href="#poruci" class="btn btn-primary price-cta">Poruči MojServis</a>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:22px;">
+      <span class="eyebrow" style="margin:0;">ili</span><br>
+      <a href="#poruci" class="btn btn-ghost" style="margin-top:10px; color:var(--ink); border-color:var(--line);">Isprobaj besplatno 14 dana →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-dark" id="poruci">
+  <div class="wrap" style="max-width:640px;">
+    <div class="eyebrow">Kako da naručiš</div>
+    <h2 style="color:#fff;">Tri koraka, bez formulara i naloga.</h2>
+
+    <div class="ticket" style="padding:30px 32px; margin-bottom:24px;">
+      <span class="ticket-tag">Korak 1</span>
+      <p style="margin-top:8px; font-size:15px;"><strong>Uplati na račun</strong> — 89 € (≈10.450 RSD) za punu verziju, ili pošalji poruku za besplatnu 14-dnevnu probnu verziju bez uplate.</p>
+      <p style="margin-top:10px; font-size:13.5px; color:var(--muted);" class="mono">Dinarski račun (RSD): 265-0000007595530-75<br>Devizni račun (EUR) IBAN: RS35265044000012933242<br>SWIFT/BIC: RZBSRSBG<br>Banka: Raiffeisen banka<br>Primalac: MojServis<br>Svrha uplate: MojServis licenca</p>
+    </div>
+    <div class="ticket" style="padding:30px 32px; margin-bottom:24px;">
+      <span class="ticket-tag">Korak 2</span>
+      <p style="margin-top:8px; font-size:15px;"><strong>Pošalji potvrdu</strong> — klikni dugme ispod, otvoriće ti se mejl sa već pripremljenom porukom. Samo dodaj potvrdu uplate (ili napiši da želiš probnu verziju) i pošalji.</p>
+    </div>
+    <div class="ticket" style="padding:30px 32px; margin-bottom:32px;">
+      <span class="ticket-tag">Korak 3</span>
+      <p style="margin-top:8px; font-size:15px;"><strong>Dobijaš ključ na mejl</strong> — obično isti ili naredni radni dan. Unosiš ga pri prvom pokretanju aplikacije i gotovo.</p>
+    </div>
+
+    <div style="text-align:center;">
+      <a class="btn btn-primary" href="mailto:djenka40@yahoo.com?subject=Poruc%CC%8Cujem%20MojServis&body=Zdravo%2C%0A%0AZelim%20da%20porucim%3A%0A%5B%20%5D%20Punu%20verziju%20MojServis-a%20(89%20EUR)%20-%20uplatu%20saljem%2Fsam%20poslao%0A%5B%20%5D%20Besplatnu%2014-dnevnu%20probnu%20verziju%0A%0AIme%20radnje%3A%20%0AKontakt%20telefon%3A%20%0A%0AHvala!">✉ Pošalji porudžbinu mejlom</a>
+      <p style="color:#8A8F98; font-size:13px; margin-top:14px;">Ne otvara se mejl automatski? Piši direktno na <span class="mono">djenka40@yahoo.com</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="section-light" style="padding-top:0;">
+  <div class="wrap">
+    <div class="eyebrow">Pitanja</div>
+    <h2>Pre nego što pitaš.</h2>
+
+    <div class="faq-item">
+      <h4>Da li mi treba internet da bih koristio MojServis?</h4>
+      <p>Ne za svakodnevni rad. Baza podataka je na tvom računaru. Internet je potreban samo jednom, pri aktivaciji licence.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Kako radi besplatna probna verzija?</h4>
+      <p>Dobijaš ključ koji radi 14 dana, sa svim funkcijama uključenim, bez ikakve uplate unapred. Ako ti odgovara, samo naručiš punu licencu i nastaviš sa istom bazom podataka.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Da li MojServis zamenjuje knjigovođu?</h4>
+      <p>Ne. Automatizuje fakturisanje, PDV obračun i obračun zarada radnika, ali zvanične poreske prijave i savete oko propisa i dalje treba da radi knjigovođa. Izvoz podataka (CSV, PPP-PD XML) mu olakšava posao, ne zamenjuje ga.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Šta ako promenim računar?</h4>
+      <p>Licenca je vezana za jedan računar. Javi se za prebacivanje na novi — rešava se brzo.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Da li se plaća ponovo svake godine?</h4>
+      <p>Ne. Cena je jednokratna. Kupiš jednom, koristiš dok ti treba.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Radi li na Mac-u?</h4>
+      <p>Trenutno je testirano i podržano na Windows-u.</p>
+    </div>
+  </div>
+</section>
+
+<footer id="kontakt">
+  <div class="wrap footer-inner">
+    <div class="logo mono">■■ MojServis</div>
+    <div>Za poručivanje i pitanja, kontaktiraj direktno.</div>
+  </div>
+</footer>
+
+</body>
+</html>
