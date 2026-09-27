@@ -1,3 +1,38 @@
+lSkip to content
+Djenka40
+mojservis
+Repository navigation
+Code
+Issues
+Pull requests
+Agents
+Actions
+Projects
+Wiki
+Security and quality
+Insights
+Settings
+Files
+Go to file
+t
+T
+README.md
+google9fef136ae325de6f.html
+index.html
+mojservis-reklama.mp4
+mojservis
+/index.html
+Djenka40
+Djenka40
+Update instructions for application download and key retrieval
+40fa38e
+ · 
+2 months ago
+
+Code
+
+Blame
+618 lines (578 loc) · 21 KB
 <!DOCTYPE html>
 <html lang="sr">
 <head>
@@ -345,6 +380,17 @@
     max-width: 640px;
   }
 
+  .video-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #383D48;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    background: #000;
+  }
+  .video-wrap video { width: 100%; display: block; }
+
   footer {
     background: var(--graphite);
     color: #8A8F98;
@@ -475,6 +521,19 @@
         <h3>Izveštaji</h3>
         <p>Promet po mesecima, najprofitabilniji klijenti, izvoz u CSV za knjigovođu.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-dark" id="video">
+  <div class="wrap" style="text-align:center;">
+    <div class="eyebrow" style="text-align:center;">Video</div>
+    <h2 style="color:#fff; margin:0 auto 40px; text-align:center;">Pogledaj MojServis u akciji</h2>
+    <div class="video-wrap">
+      <video controls preload="metadata">
+        <source src="mojservis-reklama.mp4" type="video/mp4">
+        Tvoj browser ne podržava video plejer.
+      </video>
     </div>
   </div>
 </section>
@@ -616,3 +675,4 @@
 
 </body>
 </html>
+
